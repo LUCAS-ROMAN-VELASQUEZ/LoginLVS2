@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: #0e4c6d;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background-color: #2f6d94;
+            padding: 40px 30px;
+            border-radius: 12px;
+            width: 320px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
+
+        .login-container h1 {
+            color: #e5f6ff;
+            font-weight: 400;
+            font-size: 32px;
+            margin-bottom: 25px;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #f5f5f5;
+        }
+
+        .login-form button {
+            width: 100%;
+            padding: 14px;
+            background-color: #a5d0ea;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-form button:hover {
+            background-color: #8fc1dc;
+        }
+
+        .login-links {
+    margin-top: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+        .login-links a {
+            color: #e5f6ff;
+            text-decoration: none;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .login-links a:hover {
+            color: #ffffff;
+        }
+
+        .back-link {
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #cfe9f5;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Bienvenido</h1>
+        <form class="login-form">
+            <input type="text" placeholder="Usuario" required>
+            <input type="password" placeholder="Contraseña" required>
+            <button type="submit">Login</button>
+        </form>
+        <div class="login-links">
+            <a href="#">¿Perdiste tu contraseña?</a>
+            <a href="#">¿No tienes Cuenta? Registrate</a>
+        </div>
+    </div>
+    <div class="back-link">
+        <a href="#">Volver</a>
+    </div>
+</body>
+</html>
