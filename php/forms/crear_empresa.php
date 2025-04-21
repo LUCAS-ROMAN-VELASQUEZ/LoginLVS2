@@ -1,6 +1,6 @@
 <?php
-// Conexión a la base de datos
-require_once 'conexion.php';
+require_once '../includes/conexion.php';  // Ruta desde forms/
+require_once '../includes/functions.php'; // Ruta desde forms/
 
 // Validar el formulario cuando se envía
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
