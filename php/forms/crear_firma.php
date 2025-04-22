@@ -12,6 +12,16 @@ if ($resultado && $resultado->num_rows > 0) {
     }
 }
 
+// Obtener todas las firmas (sin filtrar por empresa)
+$firmas = [];
+$sql_firmas = "SELECT * FROM Firma";
+$resultado_firmas = $conexion->query($sql_firmas);
+if ($resultado_firmas && $resultado_firmas->num_rows > 0) {
+    while ($fila_firma = $resultado_firmas->fetch_assoc()) {
+        $firmas[] = $fila_firma;
+    }
+}
+
 // Obtener empresa_id desde la URL (si viene)
 $empresa_id = isset($_GET['empresa_id']) && is_numeric($_GET['empresa_id']) ? $_GET['empresa_id'] : null;
 
@@ -67,3 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <button type="submit">Crear Firma</button>
 </form>
+
+<h2>Firmas Existentes</h2>
+<ul>
+    <?php foreach ($firmas as $firma): ?>
+        <li>
+            <?= htmlspecialchars($firma['name']) ?> 
+            <a href="editar_firma.php?id=<?= $firma['id'] ?>"><button>Editar</button></a> <!-- Botón de editar -->
+        </li>
+    <?php endforeach; ?>
+</ul>

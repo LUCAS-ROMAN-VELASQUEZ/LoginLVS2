@@ -46,6 +46,8 @@ if ($id_empresa) {
             (Empresa ID: <?= htmlspecialchars($row['id_empresa']) ?>)
         <?php endif; ?>
         <button>Enviar solicitud de info</button>
+        <!-- Botón de editar -->
+        <a href="editar_empleado.php?id=<?= $row['id'] ?>"><button>Editar</button></a>
     </li>
 <?php endwhile; ?>
 </ul>

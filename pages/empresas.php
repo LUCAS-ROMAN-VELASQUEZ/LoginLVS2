@@ -2,7 +2,6 @@
 require_once '../php/includes/conexion.php';  // Ruta desde "pages"
 require_once '../php/includes/functions.php'; // Ruta desde "pages"
 include '../php/includes/header.php'; // Incluir el header
-
 $resultado = $conexion->query("SELECT * FROM Empresa");
 ?>
 
@@ -12,11 +11,9 @@ $resultado = $conexion->query("SELECT * FROM Empresa");
 <ul>
 <?php while ($row = $resultado->fetch_assoc()): ?>
     <li>
-        <?= htmlspecialchars($row['name']) ?>
-        <!-- Enlace para ver empleados directamente -->
-        | <a href="empleados.php?id=<?= urlencode($row['id']) ?>">Ver empleados</a>
-        <!-- Opcional: puedes mantener el enlace al panel si lo necesitas -->
-        | <a href="empresa_panel.php?id=<?= urlencode($row['id']) ?>">Detalles</a>
+        <?= $row['name'] ?>
+        <a href="empresa_panel.php?id=<?= $row['id'] ?>">Ver detalles</a>
+        <a href="editar_empresa.php?id=<?= $row['id'] ?>"><button>Editar</button></a> <!-- Botón de editar -->
     </li>
 <?php endwhile; ?>
 </ul>
