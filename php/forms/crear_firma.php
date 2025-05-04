@@ -12,23 +12,13 @@ if ($resultado && $resultado->num_rows > 0) {
     }
 }
 
-// Obtener todas las firmas (sin filtrar por empresa)
-$firmas = [];
-$sql_firmas = "SELECT * FROM Firma";
-$resultado_firmas = $conexion->query($sql_firmas);
-if ($resultado_firmas && $resultado_firmas->num_rows > 0) {
-    while ($fila_firma = $resultado_firmas->fetch_assoc()) {
-        $firmas[] = $fila_firma;
-    }
-}
-
 // Obtener empresa_id desde la URL (si viene)
 $empresa_id = isset($_GET['empresa_id']) && is_numeric($_GET['empresa_id']) ? $_GET['empresa_id'] : null;
 
 // Si se ha enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nombre_firma = $_POST['nombre_firma'];
-    $empresa_id = $_POST['empresa_id']; // desde el select
+    $empresa_id = $_POST['empresa_id']; // ID de la empresa seleccionada
     $variable1 = $_POST['variable1'];
     $variable2 = $_POST['variable2'];
     $variable3 = $_POST['variable3'];
@@ -36,22 +26,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $variable5 = $_POST['variable5'];
     $variable6 = $_POST['variable6'];
 
-    if (!empty($nombre_firma) && !empty($empresa_id)) {
-        $stmt = $conexion->prepare("INSERT INTO Firma (name, variable1, variable2, variable3, variable4, variable5, variable6, id_empresa) 
-                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssssi", $nombre_firma, $variable1, $variable2, $variable3, $variable4, $variable5, $variable6, $empresa_id);
-        $stmt->execute();
-        $stmt->close();
+    // Insertar la firma con el id_empresa
+    $stmt = $conexion->prepare("INSERT INTO Firma (name, variable1, variable2, variable3, variable4, variable5, variable6, id_empresa) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssssi", $nombre_firma, $variable1, $variable2, $variable3, $variable4, $variable5, $variable6, $empresa_id);
+    $stmt->execute();
+    $stmt->close();
 
-        echo "<p style='color: green;'>✅ Firma creada correctamente.</p>";
-        echo '<a href="/loguin/pages/firmas.php?id=' . urlencode($empresa_id) . '">
-                <button>Volver al listado de firmas</button>
-              </a>';
-        exit;
+    echo "<p style='color: green;'>✅ Firma creada correctamente.</p>";
+    echo '<a href="/loguin/pages/firmas.php?id=' . urlencode($empresa_id) . '"><button>Volver al listado de firmas</button></a>';
+    exit;
+
+
     } else {
         echo "<p style='color: red;'>⚠️ El nombre de la firma y la empresa son obligatorios.</p>";
     }
-}
+
 ?>
 
 <h2>Crear Nueva Firma</h2>
@@ -70,20 +60,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php endforeach; ?>
     </select><br><br>
 
-    <?php for ($i = 1; $i <= 6; $i++): ?>
-        <label for="variable<?= $i ?>">Variable <?= $i ?>:</label>
-        <input type="text" id="variable<?= $i ?>" name="variable<?= $i ?>"><br><br>
-    <?php endfor; ?>
+    <label for="variable1">Variable 1:</label>
+    <input type="text" id="variable1" name="variable1"><br><br>
+
+    <label for="variable2">Variable 2:</label>
+    <input type="text" id="variable2" name="variable2"><br><br>
+
+    <label for="variable3">Variable 3:</label>
+    <input type="text" id="variable3" name="variable3"><br><br>
+
+    <label for="variable4">Variable 4:</label>
+    <input type="text" id="variable4" name="variable4"><br><br>
+
+    <label for="variable5">Variable 5:</label>
+    <input type="text" id="variable5" name="variable5"><br><br>
+
+    <label for="variable6">Variable 6:</label>
+    <input type="text" id="variable6" name="variable6"><br><br>
 
     <button type="submit">Crear Firma</button>
 </form>
-
-<h2>Firmas Existentes</h2>
-<ul>
-    <?php foreach ($firmas as $firma): ?>
-        <li>
-            <?= htmlspecialchars($firma['name']) ?> 
-            <a href="editar_firma.php?id=<?= $firma['id'] ?>"><button>Editar</button></a> <!-- Botón de editar -->
-        </li>
-    <?php endforeach; ?>
-</ul>

@@ -3,69 +3,57 @@ require_once '../php/includes/conexion.php';  // Ruta desde "pages"
 require_once '../php/includes/functions.php'; // Ruta desde "pages"
 include '../php/includes/header.php'; // Incluir el header
 
-// Obtener todas las firmas existentes
-$stmt_firmas = $conexion->prepare("SELECT * FROM Firma");
-$stmt_firmas->execute();
-$resultado_firmas = $stmt_firmas->get_result();
-
-// Obtener lista de empresas para el select (si se desea seleccionar una empresa al crear una firma)
-$empresas = [];
-$sql = "SELECT id, name FROM Empresa";
-$resultado_empresas = $conexion->query($sql);
-if ($resultado_empresas && $resultado_empresas->num_rows > 0) {
-    while ($fila = $resultado_empresas->fetch_assoc()) {
-        $empresas[] = $fila;
-    }
+// Eliminar firma si se recibe por GET
+if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
+    $id_firma = intval($_GET['eliminar']);
+    $conexion->query("DELETE FROM Empleado_Firma WHERE id_firma = $id_firma"); // Elimina relación
+    $conexion->query("DELETE FROM Firma WHERE id = $id_firma");
+    echo "<p style='color:green;'>✅ Firma eliminada correctamente.</p>";
 }
 
+// Obtener firmas con empresa
+$query = "
+    SELECT f.id, f.name AS firma, e.name AS empresa 
+    FROM Firma f 
+    JOIN Empresa e ON f.id_empresa = e.id
+    ORDER BY e.name ASC, f.name ASC
+";
+$resultado = $conexion->query($query);
 ?>
 
-<h2>Crear Nueva Firma</h2>
+<h2>Gestión de Firmas</h2>
 
-<form action="crear_firma.php" method="POST">
-    <label for="nombre_firma">Nombre de la Firma:</label>
-    <input type="text" id="nombre_firma" name="nombre_firma" required><br><br>
+<!-- Botón para crear nueva firma -->
+<a href="crear_firma.php" style="display:inline-block;margin-bottom:20px;padding:8px 16px;background-color:#007BFF;color:white;text-decoration:none;border-radius:4px;">➕ Crear Nueva Firma</a>
 
-    <label for="empresa_id">Selecciona la Empresa:</label>
-    <select name="empresa_id" id="empresa_id" required>
-        <option value="">-- Elige una empresa --</option>
-        <?php foreach ($empresas as $empresa): ?>
-            <option value="<?= $empresa['id'] ?>"><?= htmlspecialchars($empresa['name']) ?></option>
-        <?php endforeach; ?>
-    </select><br><br>
-
-    <label for="variable1">Variable 1:</label>
-    <input type="text" id="variable1" name="variable1"><br><br>
-
-    <label for="variable2">Variable 2:</label>
-    <input type="text" id="variable2" name="variable2"><br><br>
-
-    <label for="variable3">Variable 3:</label>
-    <input type="text" id="variable3" name="variable3"><br><br>
-
-    <label for="variable4">Variable 4:</label>
-    <input type="text" id="variable4" name="variable4"><br><br>
-
-    <label for="variable5">Variable 5:</label>
-    <input type="text" id="variable5" name="variable5"><br><br>
-
-    <label for="variable6">Variable 6:</label>
-    <input type="text" id="variable6" name="variable6"><br><br>
-
-    <button type="submit">Crear Firma</button>
-</form>
-
-<h2>Firmas Existentes</h2>
-<ul>
-<?php while ($firma = $resultado_firmas->fetch_assoc()): ?>
-    <li>
-        <?= htmlspecialchars($firma['name']) ?>
-        <a href="editar_firma.php?id=<?= $firma['id'] ?>"><button>Editar</button></a> <!-- Botón de editar -->
-    </li>
-<?php endwhile; ?>
-</ul>
-
+<!-- Lista de firmas -->
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Firma</th>
+            <th>Empresa</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if ($resultado->num_rows > 0): ?>
+            <?php while ($row = $resultado->fetch_assoc()): ?>
+                <tr>
+                    <td><?= htmlspecialchars($row['firma']) ?></td>
+                    <td><?= htmlspecialchars($row['empresa']) ?></td>
+                    <td>
+                        <a href="editar_firma.php?id=<?= $row['id'] ?>">✏️ Editar</a> |
+                        <a href="firmas.php?eliminar=<?= $row['id'] ?>" onclick="return confirm('¿Seguro que quieres eliminar esta firma?')">🗑️ Eliminar</a>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="3">No hay firmas registradas.</td>
+            </tr>
+        <?php endif; ?>
+    </tbody>
+</table>
 <?php
-$stmt_firmas->close();
 include '../php/includes/footer.php'; // Incluir el footer
 ?>

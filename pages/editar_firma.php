@@ -36,7 +36,7 @@ $stmt_empresas->close();
 // Procesar formulario de edición
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nombre_firma = $_POST['nombre_firma'];
-    $empresa_id = $_POST['empresa_id']; // Empresa seleccionada
+    $empresa_id = $_POST['empresa_id']; // ID de la empresa seleccionada
     $variable1 = $_POST['variable1'];
     $variable2 = $_POST['variable2'];
     $variable3 = $_POST['variable3'];
@@ -44,20 +44,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $variable5 = $_POST['variable5'];
     $variable6 = $_POST['variable6'];
 
-    // Validar los campos
-    if (!empty($nombre_firma) && !empty($empresa_id)) {
-        $stmt_update = $conexion->prepare("UPDATE Firma SET name = ?, variable1 = ?, variable2 = ?, variable3 = ?, variable4 = ?, variable5 = ?, variable6 = ?, id_empresa = ? WHERE id = ?");
-        $stmt_update->bind_param("ssssssssi", $nombre_firma, $variable1, $variable2, $variable3, $variable4, $variable5, $variable6, $empresa_id, $firma_id);
-        $stmt_update->execute();
-        $stmt_update->close();
+    // Actualizar los datos de la firma
+    $stmt_update = $conexion->prepare("UPDATE Firma SET name = ?, variable1 = ?, variable2 = ?, variable3 = ?, variable4 = ?, variable5 = ?, variable6 = ?, id_empresa = ? WHERE id = ?");
+    $stmt_update->bind_param("ssssssssi", $nombre_firma, $variable1, $variable2, $variable3, $variable4, $variable5, $variable6, $empresa_id, $firma_id);
+    $stmt_update->execute();
+    $stmt_update->close();
 
-        echo "<p style='color: green;'>✅ Firma actualizada correctamente.</p>";
-        echo '<a href="firmas.php?id=' . urlencode($empresa_id) . '"><button>Volver al listado de firmas</button></a>';
-        exit;
-    } else {
+    echo "<p style='color: green;'>✅ Firma actualizada correctamente.</p>";
+    echo '<a href="firmas.php?id=' . urlencode($empresa_id) . '"><button>Volver al listado de firmas</button></a>';
+    exit;
+}
+
+    else {
         echo "<p style='color: red;'>⚠️ El nombre de la firma y la empresa son obligatorios.</p>";
     }
-}
+
 ?>
 
 <h2>Editar Firma</h2>

@@ -25,5 +25,5 @@ if ($conexion->connect_error) {
     die("Error de conexión: " . $conexion->connect_error);
 }
 
-echo "Conexión exitosa"; // <-- esto muestra si todo va bien
+//echo "Conexión exitosa"; // <-- esto muestra si todo va bien
 ?>
