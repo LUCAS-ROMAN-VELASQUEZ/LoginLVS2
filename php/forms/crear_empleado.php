@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nombre_empleado'])) {
 
     <div id="contenedor_firmas" style="display: none;">
         <label>Firmas Disponibles:</label>
-        <select name="firmas_seleccionadas[]" id="firmas_seleccionadas" multiple size="6"></select><br><br>
+        <div id="firmas_seleccionadas" style="display: flex; flex-direction: column; gap: 5px;"></div><br>
     </div>
 
     <button type="submit">Crear Empleado</button>
@@ -129,26 +129,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nombre_empleado'])) {
 <script>
 document.getElementById("empresa_id").addEventListener("change", function () {
     const empresaId = this.value;
-    console.log(empresaId);
 
     if (empresaId) {
         fetch("http://localhost/loguin/php/ajax/obtener_firmas.php", {
-            
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ empresa_id: empresaId })
         })
         .then(res => res.json())
         .then(data => {
-            const firmasSelect = document.getElementById("firmas_seleccionadas");
-            firmasSelect.innerHTML = "";
+            const firmasContainer = document.getElementById("firmas_seleccionadas");
+            firmasContainer.innerHTML = "";
+
             if (data.length > 0) {
                 data.forEach(firma => {
-                    const option = document.createElement("option");
-                    option.value = firma.id;
-                    option.textContent = firma.name;
-                    firmasSelect.appendChild(option);
+                    const label = document.createElement("label");
+                    label.style.display = "flex";
+                    label.style.alignItems = "center";
+                    label.style.gap = "6px";
+
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.name = "firmas_seleccionadas[]";
+                    checkbox.value = firma.id;
+
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(firma.name));
+                    firmasContainer.appendChild(label);
                 });
+
                 document.getElementById("contenedor_firmas").style.display = "block";
             } else {
                 document.getElementById("contenedor_firmas").style.display = "none";

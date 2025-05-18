@@ -52,12 +52,15 @@ if ($id_empresa) {
                 </td>
                 <td><?= htmlspecialchars($row['id_empresa']) ?></td>
                 <td>
-                    <a href="ver_firmas.php?empleado_id=<?= $row['id'] ?>&empresa_id=<?= $row['id_empresa'] ?>">👁️ Firmas</a> |
-                    <a href="editar_empleado.php?id=<?= $row['id'] ?>">✏️ Editar</a>
-                </td>
+    <a href="ver_firmas.php?id_empleado=<?= $row['id'] ?>&id_empresa=<?= $row['id_empresa'] ?>" style="margin-right:10px;">👁️ Firmas</a>
+    <a href="editar_empleado.php?id=<?= $row['id'] ?>">✏️ Editar</a>
+</td>
+
             </tr>
         <?php endwhile; ?>
     </tbody>
 </table>
 
 <?php include '../php/includes/footer.php'; ?>
+
+
